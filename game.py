@@ -9,6 +9,12 @@ SHIP_SPEED = 4
 
 left_pressed = False
 right_pressed = False
+KEYS = {
+    "left": False,
+    "right": False,
+    "up": False,
+    "down": False,
+}
 
 spaceship = Actor("spaceship")
 spaceship.pos = (WIDTH / 2, HEIGHT - 55)
@@ -64,26 +70,37 @@ def update():
         actor.angle += asteroid["rotation_speed"]
     spaceship.angle = 180
 
-    if left_pressed:
+
+    if KEYS["left"] and spaceship.left > 0:
         spaceship.left -= SHIP_SPEED
-    if right_pressed:
+    if KEYS["right"] and spaceship.right < WIDTH:
         spaceship.left += SHIP_SPEED
+    if KEYS["up"] and spaceship.top > 0:
+        spaceship.top -= SHIP_SPEED
+    if KEYS["down"] and spaceship.bottom < HEIGHT:
+        spaceship.top += SHIP_SPEED
 
 def on_key_down(key):
-    global left_pressed, right_pressed
+    global KEYS
     if key == keys.RIGHT:
-        right_pressed = True
+        KEYS["right"] = True
     if key == keys.LEFT:
-        left_pressed = True
+        KEYS["left"] = True
+    if key == keys.UP:
+        KEYS["up"] = True
+    if key == keys.DOWN:
+        KEYS["down"] = True
 
 def on_key_up(key):
-    global left_pressed, right_pressed
+    global KEYS
     if key == keys.RIGHT:
-        right_pressed = False
+        KEYS["right"] = False
     if key == keys.LEFT:
-        left_pressed = False
-
-
+        KEYS["left"] = False
+    if key == keys.UP:
+        KEYS["up"] = False
+    if key == keys.DOWN:
+        KEYS["down"] = False
 
 
 
