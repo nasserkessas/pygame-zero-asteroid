@@ -2,8 +2,8 @@ from random import randint, uniform
 
 WIDTH = 800
 HEIGHT = 600
-
 SHIP_SPEED = 4
+
 game_over = False
 game_over_frame = 0
 spaceship = Actor("spaceship")
@@ -19,6 +19,13 @@ KEYS = {
 def make_star(y=None):
     size = randint(1,3)
     stars.append({"x": randint(0, WIDTH), "y": y if y != None else randint(0, HEIGHT), "width": size, "shade": 127 + size * 32})
+
+def make_asteroid():
+    asteroids.append({
+        "actor": Actor("asteroid_" + str(randint(1, 5))),
+        "rotation_speed": uniform(0.3, 2),
+        "speed": uniform(1, 3)
+    })
 
 def start():
     global game_over, game_over_frame, spaceship
@@ -40,11 +47,7 @@ def start():
         make_star()
 
     for i in range(ASTEROID_COUNT):
-        asteroids.append({
-        "actor": Actor("asteroid_" + str(randint(1, 5))),
-        "rotation_speed": uniform(0.3, 2),
-        "speed": uniform(1, 3)
-        })
+        make_asteroid()
 
     for asteroid in asteroids:
         asteroid["actor"].pos = (randint(0, WIDTH), 0)
@@ -73,7 +76,7 @@ def draw():
         if game_over_frame>4:
             screen.draw.text("GAME OVER", color = "white", center=(WIDTH/2,HEIGHT/2), fontsize=80)
             screen.draw.text("Press ENTER to play again", color = "white", center=(WIDTH/2,HEIGHT/2+50), fontsize=35)
-        game_over_frame += 0.4
+        game_over_frame += 0.6
 
 
 
@@ -91,7 +94,7 @@ def update():
             actor.bottom += asteroid["speed"]
             if actor.bottom > HEIGHT:
                 asteroids.remove(asteroid)
-                asteroids.append({"actor": Actor("asteroid_" + str(randint(1, 5))), "rotation_speed": uniform(0.3, 2), "speed": uniform(1, 3)})
+                make_asteroid()
                 asteroids[len(asteroids)-1]["actor"].pos = (randint(0, WIDTH), 0)
             actor.angle += asteroid["rotation_speed"]
 
@@ -138,7 +141,7 @@ def on_key_up(key):
     if key == keys.DOWN:
         KEYS["down"] = False
 
-
+clock.schedule_interval(make_asteroid, 10)
 
 '''
 asteroid = []
